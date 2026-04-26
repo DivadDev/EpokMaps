@@ -44,8 +44,9 @@
         document.title = UnminedMapProperties.worldName + " - " + document.title;
 
         if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
-            UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
-        }
+            UnminedMapProperties.markers = UnminedMapProperties.markers || [];
+             UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
+          }
         
         if (UnminedPlayers && UnminedPlayers.length > 0) {
             UnminedMapProperties.playerMarkers = Unmined.createPlayerMarkers(UnminedPlayers);
