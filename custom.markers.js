@@ -11,6 +11,9 @@ UnminedCustomMarkers = {
         {
             x: -144,
             z: -32,
+            image: "custom.pin.png",
+            imageAnchor: [0.5, 1],
+            imageScale: 0.5,
             text: "Mountville",
             textColor: "#ffffff",
             offsetX: 0,
@@ -21,6 +24,9 @@ UnminedCustomMarkers = {
         {
             x: 252,
             z: -141,
+            image: "custom.pin.png",
+            imageAnchor: [0.5, 1],
+            imageScale: 0.5,
             text: "Hedekas",
             textColor: "#ffffff",
             offsetX: 0,
