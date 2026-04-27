@@ -32,8 +32,9 @@ UnminedCustomMarkers = {
             offsetX: 0,
             offsetY: 15,
             font: "bold 18px Arial",
-        },
+        }
 
+        /*
         {
             x: -181,
             z: -157,
@@ -46,6 +47,7 @@ UnminedCustomMarkers = {
             offsetY: 15,
             font: "bold 10px Arial",
         }
+        */
 
     ]
 }
