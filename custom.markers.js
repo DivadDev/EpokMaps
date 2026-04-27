@@ -39,7 +39,7 @@ UnminedCustomMarkers = {
             z: -157,
             image: "store.pin.png",
             imageAnchor: [0.5, 1],
-            imageScale: 0.5,
+            imageScale: 0.1,
             text: "The Big Barrel",
             textColor: "#ffffff",
             offsetX: 0,
