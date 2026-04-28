@@ -95,7 +95,7 @@ div.ol-mouse-position {
 #side-label {
     position: absolute;
     top: 10px;
-    left: 5%;
+    left: 11%;
     transform: translateX(-50%);
 
     background: rgba(255, 255, 255, 0.9);
@@ -104,4 +104,6 @@ div.ol-mouse-position {
     font-weight: bold;
     z-index: 1000;
 }
+
+
 
