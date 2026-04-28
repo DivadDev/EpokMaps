@@ -90,6 +90,7 @@ div.ol-mouse-position {
     border-radius: 6px;
     font-weight: bold;
     z-index: 1000;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 }
 
 #side-label {
@@ -103,7 +104,24 @@ div.ol-mouse-position {
     border-radius: 6px;
     font-weight: bold;
     z-index: 1000;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 }
 
+#search-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
 
+#marker-search {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    width: 220px;
 
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
