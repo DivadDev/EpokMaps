@@ -41,6 +41,10 @@
     <div id="side-label">EpokMaps ©Everest Corp</div>
     <div id="map"></div>
 
+    <div id="search-container">
+    <input type="text" id="marker-search" placeholder="Search location..." />
+    </div>
+
     <script type="text/javascript">
 
         document.title = UnminedMapProperties.worldName + " - " + document.title;
@@ -56,6 +60,51 @@
 
         const mapElement = document.getElementById('map');
         const unmined = new Unmined(mapElement, UnminedMapProperties, UnminedRegions);
+
+        const searchInput = document.getElementById("marker-search");
+
+// Combine all markers (custom + default + players if needed)
+function getAllMarkers() {
+    let markers = [];
+
+    if (UnminedMapProperties.markers) {
+        markers = markers.concat(UnminedMapProperties.markers);
+    }
+
+    if (UnminedMapProperties.playerMarkers) {
+        markers = markers.concat(UnminedMapProperties.playerMarkers);
+    }
+
+    return markers;
+}
+
+searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        const query = searchInput.value.toLowerCase().trim();
+        if (!query) return;
+
+        const markers = getAllMarkers();
+
+        const found = markers.find(m => 
+            m.text && m.text.toLowerCase().includes(query)
+        );
+
+        if (found) {
+            // Center map
+            unmined.center([found.x, found.z]);
+
+            // Place red marker (optional but nice UX)
+            unmined.placeRedDotMarker([found.x, found.z]);
+        } else {
+            Toastify({
+                text: "Location not found",
+                duration: 2000,
+                gravity: "top",
+                position: "center",
+            }).showToast();
+        }
+    }
+});
 
 
     </script>
