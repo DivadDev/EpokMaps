@@ -91,3 +91,17 @@ div.ol-mouse-position {
     font-weight: bold;
     z-index: 1000;
 }
+
+#side-label {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    transform: translateX(-50%);
+
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
