@@ -137,7 +137,9 @@ searchInput.addEventListener("focus", () => {
 
 // ❌ HIDE DROPDOWN WHEN CLICKING OUTSIDE
 document.addEventListener("click", (e) => {
-    if (!document.getElementById("search-container").contains(e.target)) {
+    const container = document.getElementById("search-container");
+
+    if (!container.contains(e.target)) {
         resultsBox.style.display = "none";
     }
 });
