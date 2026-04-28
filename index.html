@@ -131,8 +131,10 @@ searchInput.addEventListener("keydown", function (e) {
 
 // 📦 SHOW DROPDOWN ON FOCUS
 searchInput.addEventListener("focus", () => {
-    resultsBox.style.display = "block";
-    updateResults("");
+    setTimeout(() => {
+        resultsBox.style.display = "block";
+        updateResults(searchInput.value.toLowerCase().trim());
+    }, 50);
 });
 
 // ❌ HIDE DROPDOWN WHEN CLICKING OUTSIDE
