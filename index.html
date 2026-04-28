@@ -45,11 +45,6 @@
     <input type="text" id="marker-search" placeholder="Search location..." />
     </div>
 
-    <div id="search-container">
-    <input type="text" id="marker-search" placeholder="Search location..." />
-    <div id="search-results"></div>
-    </div>
-
     <script type="text/javascript">
 
         document.title = UnminedMapProperties.worldName + " - " + document.title;
@@ -102,6 +97,11 @@ const target = ol.proj.transform(
     unmined.dataProjection,
     unmined.viewProjection
 );
+
+    <div id="search-container">
+    <input type="text" id="marker-search" placeholder="Search location..." />
+    <div id="search-results"></div>
+    </div>
 
 const currentZoom = view.getZoom();
 const targetZoom = Math.min(currentZoom + 2, view.getMaxZoom());
