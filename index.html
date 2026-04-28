@@ -90,8 +90,29 @@ searchInput.addEventListener("keydown", function (e) {
         );
 
         if (found) {
-            // Center map
-            unmined.center([found.x, found.z]);
+            const view = unmined.olMap.getView();
+
+const target = ol.proj.transform(
+    [found.x, found.z],
+    unmined.dataProjection,
+    unmined.viewProjection
+);
+
+const currentZoom = view.getZoom();
+const targetZoom = Math.min(currentZoom + 2, view.getMaxZoom());
+
+view.animate(
+    {
+        center: target,
+        duration: 800,
+        easing: ol.easing.easeOut
+    },
+    {
+        zoom: targetZoom,
+        duration: 600,
+        easing: ol.easing.easeOut
+    }
+);
 
         } else {
             Toastify({
