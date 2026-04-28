@@ -47,23 +47,24 @@
 
     <script type="text/javascript">
 
-        document.title = UnminedMapProperties.worldName + " - " + document.title;
+document.title = UnminedMapProperties.worldName + " - " + document.title;
 
-        if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
-            UnminedMapProperties.markers = UnminedMapProperties.markers || [];
-             UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
-          }
-        
-        if (UnminedPlayers && UnminedPlayers.length > 0) {
-            UnminedMapProperties.playerMarkers = Unmined.createPlayerMarkers(UnminedPlayers);
-        }
+if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
+    UnminedMapProperties.markers = UnminedMapProperties.markers || [];
+    UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
+}
 
-        const mapElement = document.getElementById('map');
-        const unmined = new Unmined(mapElement, UnminedMapProperties, UnminedRegions);
+if (UnminedPlayers && UnminedPlayers.length > 0) {
+    UnminedMapProperties.playerMarkers = Unmined.createPlayerMarkers(UnminedPlayers);
+}
 
-        const searchInput = document.getElementById("marker-search");
+const mapElement = document.getElementById('map');
+const unmined = new Unmined(mapElement, UnminedMapProperties, UnminedRegions);
 
-// Combine all markers (custom + default + players if needed)
+const searchInput = document.getElementById("marker-search");
+const resultsBox = document.getElementById("search-results");
+
+// Combine all markers
 function getAllMarkers() {
     let markers = [];
 
@@ -78,6 +79,7 @@ function getAllMarkers() {
     return markers;
 }
 
+// 🔍 ENTER SEARCH (smooth zoom + pan)
 searchInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
         const query = searchInput.value.toLowerCase().trim();
@@ -92,32 +94,27 @@ searchInput.addEventListener("keydown", function (e) {
         if (found) {
             const view = unmined.olMap.getView();
 
-const target = ol.proj.transform(
-    [found.x, found.z],
-    unmined.dataProjection,
-    unmined.viewProjection
-);
+            const target = ol.proj.transform(
+                [found.x, found.z],
+                unmined.dataProjection,
+                unmined.viewProjection
+            );
 
-    <div id="search-container">
-    <input type="text" id="marker-search" placeholder="Search location..." />
-    <div id="search-results"></div>
-    </div>
+            const currentZoom = view.getZoom();
+            const targetZoom = Math.min(currentZoom + 2, view.getMaxZoom());
 
-const currentZoom = view.getZoom();
-const targetZoom = Math.min(currentZoom + 2, view.getMaxZoom());
-
-view.animate(
-    {
-        center: target,
-        duration: 800,
-        easing: ol.easing.easeOut
-    },
-    {
-        zoom: targetZoom,
-        duration: 600,
-        easing: ol.easing.easeOut
-    }
-);
+            view.animate(
+                {
+                    center: target,
+                    duration: 800,
+                    easing: ol.easing.easeOut
+                },
+                {
+                    zoom: targetZoom,
+                    duration: 600,
+                    easing: ol.easing.easeOut
+                }
+            );
 
         } else {
             Toastify({
@@ -130,8 +127,65 @@ view.animate(
     }
 });
 
+// 📦 SHOW DROPDOWN ON FOCUS
+searchInput.addEventListener("focus", () => {
+    resultsBox.style.display = "block";
+    updateResults("");
+});
 
-    </script>
+// ❌ HIDE DROPDOWN WHEN CLICKING OUTSIDE
+document.addEventListener("click", (e) => {
+    if (!document.getElementById("search-container").contains(e.target)) {
+        resultsBox.style.display = "none";
+    }
+});
+
+// ⌨️ LIVE SEARCH
+searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase().trim();
+    updateResults(query);
+});
+
+// 🔄 UPDATE RESULTS
+function updateResults(query) {
+    const markers = getAllMarkers();
+
+    let filtered = markers.filter(m => m.text);
+
+    if (query) {
+        filtered = filtered.filter(m =>
+            m.text.toLowerCase().includes(query)
+        );
+    }
+
+    // Sort by relevance
+    filtered.sort((a, b) => {
+        return a.text.toLowerCase().indexOf(query) - b.text.toLowerCase().indexOf(query);
+    });
+
+    filtered = filtered.slice(0, 10);
+
+    resultsBox.innerHTML = "";
+
+    filtered.forEach(marker => {
+        const div = document.createElement("div");
+        div.className = "search-item";
+        div.textContent = marker.text;
+
+        div.addEventListener("click", () => {
+            searchInput.value = marker.text;
+            resultsBox.style.display = "none";
+
+            // trigger enter search
+            const event = new KeyboardEvent("keydown", { key: "Enter" });
+            searchInput.dispatchEvent(event);
+        });
+
+        resultsBox.appendChild(div);
+    });
+}
+
+</script>
 </body>
 
 </html>
