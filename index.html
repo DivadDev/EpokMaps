@@ -93,8 +93,6 @@ searchInput.addEventListener("keydown", function (e) {
             // Center map
             unmined.center([found.x, found.z]);
 
-            // Place red marker (optional but nice UX)
-            unmined.placeRedDotMarker([found.x, found.z]);
         } else {
             Toastify({
                 text: "Location not found",
