@@ -154,16 +154,12 @@ searchInput.addEventListener("input", () => {
 
 // 🔄 UPDATE RESULTS
 function updateResults(query) {
-    const markers = getAllMarkers();
+    const markers = getAllMarkers().filter(m => m.text);
 
-    let filtered = markers.filter(m => m.text);
-
-    if (query) {
-        filtered = filtered.filter(m =>
-            m.text.toLowerCase().includes(query)
-        );
+    if (markers.length === 0) {
+        resultsBox.innerHTML = "<div class='search-item'>No markers</div>";
+        return;
     }
-
     // Sort by relevance
     filtered.sort((a, b) => {
         return a.text.toLowerCase().indexOf(query) - b.text.toLowerCase().indexOf(query);
