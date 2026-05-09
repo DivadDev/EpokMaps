@@ -32,7 +32,21 @@ UnminedCustomMarkers = {
             offsetX: 0,
             offsetY: 15,
             font: "bold 18px Arial",
+        },
+
+         {
+            x: -714,
+            z: 29,
+            image: "custom.pin.png",
+            imageAnchor: [0.5, 1],
+            imageScale: 0.5,
+            text: "Filipistan",
+            textColor: "#ffffff",
+            offsetX: 0,
+            offsetY: 15,
+            font: "bold 18px Arial",
         }
+
 
         /*
         {
