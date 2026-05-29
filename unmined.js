@@ -247,23 +247,8 @@ class Unmined {
                     tilePixelRatio: dpiScale,
                     tileSize: worldTileSize / dpiScale,
 
-                    tileUrlFunction: (coordinate) => {
-                        const tileX = coordinate[1];
-                        const tileY = coordinate[2];
-
-                        const worldZoom = -(mapZoomLevels - coordinate[0]) + this.#options.maxZoom;
-
-                        if (this.regionMap.hasTile(tileX, tileY, worldZoom)) {
-                            const url = ('tiles/zoom.{z}/{xd}/{yd}/tile.{x}.{y}.' + this.#options.imageFormat)
-                                .replace('{z}', worldZoom)
-                                .replace('{yd}', Math.floor(tileY / 10))
-                                .replace('{xd}', Math.floor(tileX / 10))
-                                .replace('{y}', tileY)
-                                .replace('{x}', tileX);
-                            return url;
-                        }
-                        else
-                            return undefined;
+                    tileUrlFunction: (coord) => {
+                      return `tiles/${coord[0]}/${coord[1]}/${coord[2]}.png`;
                     }
                 })
             });
