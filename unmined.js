@@ -198,9 +198,24 @@ class Unmined {
 
         const layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
-                tileUrlFunction: (coord) => {
-                    return `tiles/${coord[0]}/${coord[1]}/${coord[2]}.png`;
-                }
+               tileUrlFunction: (coordinate) => {
+
+    const tileX = coordinate[1];
+    const tileY = coordinate[2];
+
+    const worldZoom = coordinate[0];
+
+    if (this.regionMap.hasTile(tileX, tileY, worldZoom)) {
+
+        return (
+            `tiles/zoom.${worldZoom}/` +
+            `${Math.floor(tileX / 10)}/${Math.floor(tileY / 10)}/` +
+            `tile.${tileX}.${tileY}.png`
+        );
+    }
+
+    return undefined;
+}
             })
         });
 
