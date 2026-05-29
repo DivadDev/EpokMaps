@@ -1,5 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>EpokSMP - Map</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="lib/ol.css">
+    <script src="lib/ol.js"></script>
+
+    <link href="lib/ol-contextmenu.css" rel="stylesheet">
+    <script src="lib/ol-contextmenu.iife.js"></script>
+
+    <script src="lib/toastify-js.js"></script>
+    <link rel="stylesheet" href="lib/toastify-js.min.css">
+
+    <script src="unmined.map.properties.js"></script>
+    <script src="unmined.map.regions.js"></script>
+    <script src="unmined.map.players.js"></script>
+    <script src="custom.markers.js"></script>
+    <script src="unmined.js"></script>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<!-- TOP BAR -->
+<div id="top-bar">
+
+    <div id="logo">EpokMaps</div>
+
+    <div id="search-wrapper">
+        <input id="marker-search" placeholder="Search places..." />
+        <div id="search-results"></div>
+    </div>
+
+    <div id="top-actions">
+        <button class="icon-btn">📍</button>
+    </div>
+
+</div>
+
+<!-- BOTTOM INFO -->
+<div id="bottom-bar">
+    <div id="top-label">Last Updated: 2026/05/09</div>
+    <div id="side-label">EpokMaps ©Everest Corp</div>
+</div>
+
 <script>
-document.title = UnminedMapProperties.worldName + " - " + document.title;
+
+document.title = UnminedMapProperties.worldName + " - EpokMaps";
 
 if (UnminedCustomMarkers?.isEnabled) {
     UnminedMapProperties.markers = [
@@ -14,7 +68,7 @@ if (UnminedPlayers?.length > 0) {
 }
 
 const unmined = new Unmined(
-    document.getElementById('map'),
+    document.getElementById("map"),
     UnminedMapProperties,
     UnminedRegions
 );
@@ -22,7 +76,7 @@ const unmined = new Unmined(
 const searchInput = document.getElementById("marker-search");
 const resultsBox = document.getElementById("search-results");
 
-function getAllMarkers() {
+function getMarkers() {
     return [
         ...(UnminedMapProperties.markers || []),
         ...(UnminedMapProperties.playerMarkers || [])
@@ -31,14 +85,50 @@ function getAllMarkers() {
 
 /* ================= SEARCH ================= */
 
+searchInput.addEventListener("input", () => {
+
+    const q = searchInput.value.toLowerCase().trim();
+    resultsBox.style.display = "block";
+
+    let results = getMarkers()
+        .filter(m => m.text?.toLowerCase().includes(q))
+        .slice(0, 10);
+
+    resultsBox.innerHTML = "";
+
+    if (results.length === 0) {
+        resultsBox.innerHTML = "<div class='search-item'>No results</div>";
+        return;
+    }
+
+    results.forEach(marker => {
+
+        const div = document.createElement("div");
+        div.className = "search-item";
+        div.textContent = marker.text;
+
+        div.onclick = () => {
+            searchInput.value = marker.text;
+            resultsBox.style.display = "none";
+
+            /* ✅ ROUTE SYSTEM HOOK */
+            unmined.handleRouteClick(marker);
+        };
+
+        resultsBox.appendChild(div);
+    });
+});
+
+/* ================= ENTER SEARCH (fly to) ================= */
+
 searchInput.addEventListener("keydown", (e) => {
+
     if (e.key !== "Enter") return;
 
-    const query = searchInput.value.toLowerCase().trim();
-    if (!query) return;
+    const q = searchInput.value.toLowerCase().trim();
 
-    const found = getAllMarkers().find(m =>
-        m.text?.toLowerCase().includes(query)
+    const found = getMarkers().find(m =>
+        m.text?.toLowerCase().includes(q)
     );
 
     if (!found) return;
@@ -51,41 +141,23 @@ searchInput.addEventListener("keydown", (e) => {
         unmined.viewProjection
     );
 
-    view.animate({ center: target, duration: 800 });
-});
-
-/* ================= DROPDOWN ================= */
-
-searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase().trim();
-    resultsBox.style.display = "block";
-
-    const markers = getAllMarkers()
-        .filter(m => m.text?.toLowerCase().includes(query))
-        .slice(0, 10);
-
-    resultsBox.innerHTML = "";
-
-    markers.forEach(marker => {
-        const div = document.createElement("div");
-        div.className = "search-item";
-        div.textContent = marker.text;
-
-        /* ✅ ROUTE CLICK HOOK */
-        div.onclick = () => {
-            searchInput.value = marker.text;
-            resultsBox.style.display = "none";
-
-            unmined.handleRouteClick(marker);
-        };
-
-        resultsBox.appendChild(div);
+    view.animate({
+        center: target,
+        duration: 800
     });
+
+    resultsBox.style.display = "none";
 });
+
+/* ================= CLOSE DROPDOWN ================= */
 
 document.addEventListener("click", (e) => {
     if (!document.getElementById("top-bar").contains(e.target)) {
         resultsBox.style.display = "none";
     }
 });
+
 </script>
+
+</body>
+</html>
